@@ -1,12 +1,14 @@
 from internal.infrastructure.data_logger import DataLogger
 from internal.infrastructure.window_capture_quartz import QuartzWindowCapture
+from internal.domain.simulator.gps_processor import GPSImageProcessorImpl
 
 
 def main():
     window_title = "Euro Truck Simulator"
     quartz_capture = QuartzWindowCapture(window_title)
+    gps_processor = GPSImageProcessorImpl()
 
-    logger = DataLogger(screen_capture=quartz_capture)
+    logger = DataLogger(screen_capture=quartz_capture, gps_processor=gps_processor)
     logger.start_key_listener()
 
     print("Iniciando captura de datos para entrenamiento. Presiona Ctrl+C para detener.")

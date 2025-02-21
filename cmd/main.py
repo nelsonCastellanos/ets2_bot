@@ -1,6 +1,5 @@
-# cmd/main.py
 from internal.domain.simulator.drive_use_case import DriveUseCase
-from internal.infrastructure.window_capture import QuartzWindowCapture
+from internal.infrastructure.window_capture_quartz import QuartzWindowCapture
 from internal.infrastructure.keyboard_controller import KeyboardController
 
 

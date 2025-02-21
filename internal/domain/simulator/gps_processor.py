@@ -2,15 +2,14 @@ from abc import ABC, abstractmethod
 import cv2
 import numpy as np
 
-
 class GPSImageProcessor(ABC):
     @abstractmethod
     def process_gps_image(self, image):
         """
-        Procesa la imagen del GPS y retorna la dirección deseada (en grados) si se detecta, o None en caso contrario.
+        Procesa la imagen del GPS y retorna la dirección deseada (en grados) 
+        si se detecta, o None en caso contrario.
         """
         pass
-
 
 class GPSImageProcessorImpl(GPSImageProcessor):
     def process_gps_image(self, image):
@@ -29,7 +28,8 @@ class GPSImageProcessorImpl(GPSImageProcessor):
         mask = cv2.erode(mask, kernel, iterations=1)
         mask = cv2.dilate(mask, kernel, iterations=2)
 
-        lines = cv2.HoughLinesP(mask, 1, np.pi / 180, threshold=50, minLineLength=30, maxLineGap=10)
+        lines = cv2.HoughLinesP(mask, 1, np.pi / 180, threshold=50, 
+                                minLineLength=30, maxLineGap=10)
 
         angle = None
 
@@ -50,3 +50,26 @@ class GPSImageProcessorImpl(GPSImageProcessor):
                 if angle < -45:
                     angle = 90 + angle
         return angle
+
+def debug_gps_image(image_path, output_path="debug_output.png"):
+    image = cv2.imread(image_path)
+    if image is None:
+        print("No se pudo cargar la imagen.")
+        return
+
+    processor = GPSImageProcessorImpl()
+    angle = processor.process_gps_image(image)
+
+    if angle is not None:
+        text = f"Angle: {angle:.2f} deg"
+        color = (0, 255, 0)
+    else:
+        text = "No GPS detected"
+        color = (0, 0, 255)
+
+    cv2.putText(image, text, (10, 30), 
+                cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+    cv2.imwrite(output_path, image)
+    cv2.imshow("Debug GPS", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

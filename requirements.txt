@@ -2,3 +2,6 @@ pygetwindow
 mss
 opencv-python
 pillow
+pywinctl
+pyautogui
+pyobjc
